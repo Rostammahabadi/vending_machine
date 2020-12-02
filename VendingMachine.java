@@ -9,6 +9,8 @@ public class VendingMachine {
   double amountReceived = 0.00;
   double amountOwed = 0.00; 
 
+  public Scanner userInput = new Scanner(System.in);
+
   protected void restock(Integer amount, String type){
     switch(type){
       case "Coca-cola":
@@ -63,7 +65,35 @@ public class VendingMachine {
   }
 
   protected void displayAmount(Double amount){
-    System.out.println("$ " + (amount - amountReceived));
+    while(amountReceived < amount){
+      System.out.println("This drink costs $ " + (amount - amountReceived));
+      System.out.println("What would you like to do?");
+      System.out.println("1       Insert Money");
+      System.out.println("2       Exit");
+      Integer selection = userInput.nextInt();
+      if (selection == 1){
+        this.insertMoney();
+        break;
+      } else {
+        this.thankYouMessage();
+        break;
+      }
+    }
+  }
+
+  protected void insertMoney(){
+    System.out.println("How much would you like to insert?");
+    System.out.println("1          $1.00");
+    System.out.println("2          $.25");
+    System.out.println("3          $.10");
+    System.out.println("4          $.05");
+    System.out.println("5          $.01");
+    Integer selection = userInput.nextInt();
+
+  }
+
+  protected void thankYouMessage(){
+    System.out.println("Thanks for checking this vending machine out!");
   }
 
   protected void dispenseMoney(){
@@ -76,8 +106,7 @@ public class VendingMachine {
     });
   }
 
-  public Integer mainMenu(){
-    Scanner userInput = new Scanner(System.in);
+  public void mainMenu(){
     System.out.println("Select an option");
     System.out.println("_________________");
     System.out.println("1       Coca-cola");
@@ -87,38 +116,15 @@ public class VendingMachine {
     System.out.println("5       Sparkling Water");
     System.out.println("                 ");
     Integer selection = userInput.nextInt();
-    return selection;
+    this.select(selection);
   }
 
   public static void main(String[] args){
     VendingMachine newVendingMachine = new VendingMachine();
     newVendingMachine.stockMoneyAndBeverages();
+    Scanner userInput = new Scanner(System.in);
+    boolean exit = false;
     Integer selection;
-    while(true){
-      try{
-        Scanner userInput = new Scanner(System.in);
-        selection = newVendingMachine.mainMenu();
-        break;
-      } catch( InputMismatchException | IllegalStateException exception) {
-        System.out.println("Invalid Number, Please try again");
-      };
-    }
-    System.out.println(selection);
-    // newVendingMachine.select(selection);
-    // System.out.println("What would you like to do?");
-    // System.out.println("1       Insert Money");
-    // System.out.println("2       Exit");
-    // selection = userInput.nextInt();
-    // if(selection == 1){
-    //   System.out.println("How much would you like to insert?");
-    //   System.out.println("1          $1.00");
-    //   System.out.println("2          $.25");
-    //   System.out.println("3          $.10");
-    //   System.out.println("4          $.05");
-    //   System.out.println("5          $.01");
-    // } else {
-    //   System.out.println("Thanks for checking this vending machine out!");
-    // };
-    // System.out.println("Ended");
+    newVendingMachine.mainMenu();
   }
 }
