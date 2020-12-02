@@ -8,6 +8,7 @@ public class VendingMachine {
 
   double amountReceived = 0.00;
   double amountOwed = 0.00; 
+  public int selection;
 
   public Scanner userInput = new Scanner(System.in);
 
@@ -48,6 +49,7 @@ public class VendingMachine {
     drinkList.put("Pepsi", 1.50);
     drinkList.put("Fanta", 1.50);
     drinkList.put("Sparkling Water", 2.00);
+    changeInventory.put(1.0, 100);
     changeInventory.put(.25, 101);
     changeInventory.put(.10, 102);
     changeInventory.put(.05, 103);
@@ -61,16 +63,21 @@ public class VendingMachine {
 
   protected void receiveMoney(Double amount){
     amountReceived += amount;
+    changeInventory.put(amount, changeInventory.get(amount) + 1);
+    if(amountReceived >= drinkList.get(drinkMenu.get(selection))){
+      System.out.println(selection);
+    };
     System.out.println(amountReceived);
   }
 
   protected void displayAmount(Double amount){
     while(amountReceived < amount){
       System.out.println("This drink costs $ " + (amount - amountReceived));
+      System.out.println("                 ");
       System.out.println("What would you like to do?");
       System.out.println("1       Insert Money");
       System.out.println("2       Exit");
-      Integer selection = userInput.nextInt();
+      selection = userInput.nextInt();
       if (selection == 1){
         this.insertMoney();
         break;
@@ -88,8 +95,18 @@ public class VendingMachine {
     System.out.println("3          $.10");
     System.out.println("4          $.05");
     System.out.println("5          $.01");
-    Integer selection = userInput.nextInt();
-
+    selection = userInput.nextInt();
+    if(selection == 1){
+      this.receiveMoney(1.00);
+    } else if (selection == 2){
+      this.receiveMoney(.25);
+    } else if (selection == 3) {
+      this.receiveMoney(.10);
+    } else if (selection == 4){
+      this.receiveMoney(.05);
+    } else if (selection == 5){
+      this.receiveMoney(.01);
+    }
   }
 
   protected void thankYouMessage(){
@@ -104,6 +121,11 @@ public class VendingMachine {
         changeInventory.put(k, changeInventory.get(k) -1);
       };
     });
+    this.thankYouMessage();
+  }
+
+  protected void dispenseDrink(){
+    inventory.put(drinkMenu.get(selection), inventory.get(drinkMenu.get(selection)) -1);
   }
 
   public void mainMenu(){
@@ -115,7 +137,7 @@ public class VendingMachine {
     System.out.println("4       Fanta");
     System.out.println("5       Sparkling Water");
     System.out.println("                 ");
-    Integer selection = userInput.nextInt();
+    selection = userInput.nextInt();
     this.select(selection);
   }
 
@@ -124,7 +146,6 @@ public class VendingMachine {
     newVendingMachine.stockMoneyAndBeverages();
     Scanner userInput = new Scanner(System.in);
     boolean exit = false;
-    Integer selection;
     newVendingMachine.mainMenu();
   }
 }
